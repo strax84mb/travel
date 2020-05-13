@@ -38,8 +38,8 @@ public class TravelControler {
 
     @HasAnyRole({"USER", "ADMIN"})
     @GetMapping(path = "/cheapest", produces = APPLICATION_JSON_VALUE, params = {"start", "destination"})
-    public PathDto calculateCheapest(@RequestParam("source")BigInteger startAirportId,
-                                     @RequestParam("destination")BigInteger destinationAirportId) {
+    public PathDto calculateCheapest(@RequestParam("start") BigInteger startAirportId,
+                                     @RequestParam("destination") BigInteger destinationAirportId) {
         return routeService.findCheapestRoute(startAirportId, destinationAirportId);
     }
 }

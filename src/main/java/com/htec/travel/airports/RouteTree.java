@@ -1,9 +1,12 @@
 package com.htec.travel.airports;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class RouteTree {
 
     private RouteRepository routeRepository;
@@ -20,7 +23,7 @@ public class RouteTree {
 
     public PathDto searchCheapestPath() {
         searchNode(root);
-        if (destinationAirportId == null) {
+        if (cheapestEndpoint == null) {
             return PathDto.builder()
                     .flights(List.of())
                     .numberOfFlights(0)
@@ -55,6 +58,7 @@ public class RouteTree {
     }
 
     private void searchNode(RouteTreeNode node) {
+        log.info("Destination >>> " + node.getDestinationId());
         List<BigInteger> stops = node.getAllStops();
         List<Route> possibleRoutes = routeRepository.findBySourceIdAndDestinationIdNotIn(node.getDestinationId(), stops);
         for (Route route : possibleRoutes) {
@@ -65,7 +69,7 @@ public class RouteTree {
                     cheapestEndpoint = newNode;
                 }
             } else {
-                if (cheapestPrice.compareTo(newNode.getSumPrice()) < 0) {
+                if (cheapestPrice.compareTo(newNode.getSumPrice()) > 0) {
                     searchNode(newNode);
                 }
             }

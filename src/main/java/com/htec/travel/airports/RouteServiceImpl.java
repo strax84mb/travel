@@ -57,7 +57,9 @@ public class RouteServiceImpl extends AbstractCSVService implements RouteService
 
     @Override
     public PathDto findCheapestRoute(BigInteger start, BigInteger destination) {
-        var tree = new RouteTree(routeRepository, start, destination);
+        var startAirport = cachingService.findAirportById(start).get();
+        var destinationAirport = cachingService.findAirportById(destination).get();
+        var tree = new RouteTree(routeRepository, startAirport.getId(), destinationAirport.getId());
         return tree.searchCheapestPath();
     }
 
